@@ -7,7 +7,8 @@ variable_name = Word(alphanums + "_").setResultsName("variable_name")
 property_name = Word(alphanums + "_").setResultsName("property_name")
 function_name = Word(alphanums + "_").setResultsName("function_name")
 parameter_name = Word(alphanums + "_")
-equals_sign = Suppress("=")
+equals = Suppress("=")
+colon = Suppress(":")
 open_parenthesis = Suppress("(")
 closed_parenthesis = Suppress(")")
 dot = Suppress(".")
@@ -16,7 +17,7 @@ function_definition = function_name + open_parenthesis + Group(
     Optional(parameter_name + ZeroOrMore(comma + parameter_name))).setResultsName("parameters") + closed_parenthesis
 
 expression = function_definition | variable_name + dot + property_name | (
-    variable_name + Optional(equals_sign + function_definition))
+    variable_name + Optional((equals | colon) + function_definition))
 
 
 def parse(expression_str):
