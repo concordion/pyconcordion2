@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
-from concordion import ConcordionTestCase
+
+from pyconcordion2 import ConcordionTestCase
 
 
 class Person(object):

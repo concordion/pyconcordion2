@@ -1,1 +1,1 @@
-#
+from concordion import ConcordionTestCase
