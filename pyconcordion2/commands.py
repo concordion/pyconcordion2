@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+from lxml import etree
 import expression_parser
 
 
@@ -64,8 +65,11 @@ class SetCommand(Command):
 class AssertEqualsCommand(Command):
     def run(self):
         expression_return = expression_parser.execute_within_context(self.context, self.expression_str)
-        result = expression_return == self.element.text
-        mark_success(result, self.element)
+        result = unicode(expression_return) == unicode(self.element.text)
+        if result:
+            mark_success(result, self.element)
+        else:
+            mark_success(result, self.element, expression_return)
 
 
 class AssertTrueCommand(Command):
@@ -84,11 +88,24 @@ class EchoCommand(Command):
     pass
 
 
-def mark_success(is_successful, element):
+def mark_success(is_successful, element, actual_value=None):
     if is_successful:
         element.attrib["class"] = "success"
     else:
         element.attrib["class"] = "failure"
+
+    if actual_value:
+        actual = etree.Element("ins")
+        actual.attrib["class"] = "actual"
+        actual.text = element.text
+
+        expected = etree.Element("del")
+        expected.attrib["class"] = "expected"
+        expected.text = element.text
+
+        element.text = None
+        element.insert(0, expected)
+        element.insert(1, actual)
 
 
 command_mapper = {
