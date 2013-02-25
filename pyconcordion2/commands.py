@@ -97,7 +97,7 @@ def mark_success(is_successful, element, actual_value=None):
     if actual_value:
         actual = etree.Element("ins")
         actual.attrib["class"] = "actual"
-        actual.text = element.text
+        actual.text = unicode(actual_value)
 
         expected = etree.Element("del")
         expected.attrib["class"] = "expected"
