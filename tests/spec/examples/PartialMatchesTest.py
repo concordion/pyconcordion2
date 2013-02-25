@@ -1,7 +1,7 @@
 from concordion import ConcordionTestCase
 
 
-class PartialMatches(ConcordionTestCase):
+class PartialMatchesTest(ConcordionTestCase):
     usernames = []
 
     def setUpUser(self, username):

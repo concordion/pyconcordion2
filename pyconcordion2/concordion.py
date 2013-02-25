@@ -29,7 +29,10 @@ class ConcordionTestCase(unittest.TestCase):
         return False
 
     def __find_spec(self):
-        filename, ext = os.path.splitext(os.path.realpath(self.__class__.__name__))
+        filename = self.__class__.__name__
+        if filename[-4:].lower() == "test":
+            filename = filename[:-4]
+        filename, ext = os.path.splitext(os.path.realpath(filename))
         filename += ".html"
         with open(filename): # will raise exception if it doesn't exist
             return filename

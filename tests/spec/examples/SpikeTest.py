@@ -8,7 +8,7 @@ class Person(object):
         self.lastName = lastName
 
 
-class Spike(ConcordionTestCase):
+class SpikeTest(ConcordionTestCase):
     def getGreetingFor(self, name):
         return "Hello %s!" % name
 
