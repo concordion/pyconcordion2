@@ -33,7 +33,7 @@ class ConcordionTestCase(unittest.TestCase):
             return filename
 
     def __write(self, filename, tree):
-        css_path = os.path.join(os.path.dirname(__file__), "..", "resources", "css", "embedded.css")
+        css_path = os.path.join(os.path.dirname(__file__), "resources", "css", "embedded.css")
         try:
             css = open(css_path, "rU").read()
         except:

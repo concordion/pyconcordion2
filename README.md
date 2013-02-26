@@ -21,3 +21,9 @@ TODO
 ====
 
 Make pyconcordion2 pass the Concordion spec
+
+License
+=======
+
+I picked MIT but really I have no idea which license to use and I don't really care. If there's any issues with MIT,
+please let me know and I'll be happy to reconsider.
