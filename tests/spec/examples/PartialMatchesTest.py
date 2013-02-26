@@ -4,7 +4,8 @@ from pyconcordion2 import ConcordionTestCase
 
 
 class PartialMatchesTest(ConcordionTestCase):
-    usernames = []
+    def setUp(self):
+        self.usernames = []
 
     def setUpUser(self, username):
         self.usernames.append(username)

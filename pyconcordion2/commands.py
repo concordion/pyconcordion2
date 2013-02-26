@@ -87,8 +87,14 @@ class Command(object):
         self.context = context
         self.children = []
 
-    def run(self):
+    def _run(self):
         raise NotImplementedError
+
+    def run(self):
+        try:
+            self._run()
+        except Exception as e:
+            mark_exception(self.element, e)
 
 
 class RunCommand(Command):
@@ -96,17 +102,17 @@ class RunCommand(Command):
 
 
 class ExecuteCommand(Command):
-    def run(self):
+    def _run(self):
         if self.element.tag.lower() == "table":
             for row in get_table_body_rows(self.element):
                 for command in self.children:
                     td_element = row.xpath("td")[command.index]
                     command.element = td_element
-                self._run()
+                self._run_children()
         else:
-            self._run()
+            self._run_children()
 
-    def _run(self):
+    def _run_children(self):
         for command in self.children:
             if isinstance(command, SetCommand):
                 command.run()
@@ -117,7 +123,7 @@ class ExecuteCommand(Command):
 
 
 class VerifyRowsCommand(Command):
-    def run(self):
+    def _run(self):
         variable_name = expression_parser.parse(self.expression_str).variable_name
         results = expression_parser.execute_within_context(self.context, self.expression_str)
         for result, row in zip(results, get_table_body_rows(self.element)):
@@ -134,14 +140,14 @@ def get_table_body_rows(table):
 
 
 class SetCommand(Command):
-    def run(self):
+    def _run(self):
         expression = expression_parser.parse(self.expression_str)
         assert expression.variable_name
         setattr(self.context, self.expression_str, self.element.text)
 
 
 class AssertEqualsCommand(Command):
-    def run(self):
+    def _run(self):
         expression_return = expression_parser.execute_within_context(self.context, self.expression_str)
         result = unicode(expression_return) == unicode(self.element.text)
         if result:
@@ -151,19 +157,19 @@ class AssertEqualsCommand(Command):
 
 
 class AssertTrueCommand(Command):
-    def run(self):
+    def _run(self):
         result = expression_parser.execute_within_context(self.context, self.expression_str)
         mark_status(result, self.element)
 
 
 class AssertFalseCommand(Command):
-    def run(self):
+    def _run(self):
         result = expression_parser.execute_within_context(self.context, self.expression_str)
         mark_status(not result, self.element)
 
 
 class EchoCommand(Command):
-    def run(self):
+    def _run(self):
         return expression_parser.execute_within_context(self.context, self.expression_str)
 
 
@@ -183,6 +189,13 @@ def mark_status(is_successful, element, actual_value=None):
         element.text = None
         element.insert(0, expected)
         element.insert(1, actual)
+
+
+def mark_exception(element, e):
+    exception_element = etree.Element("p", **{"class": "failure"})
+    exception_element.text = unicode(e)
+    parent = element.getparent()
+    parent.insert(parent.index(element) + 1, exception_element)  # we insert the exception after the element in question
 
 
 command_mapper = {

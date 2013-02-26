@@ -1,12 +1,9 @@
 from __future__ import unicode_literals
+from collections import namedtuple
 
 from pyconcordion2 import ConcordionTestCase
 
-
-class Person(object):
-    def __init__(self, firstName, lastName):
-        self.firstName = firstName
-        self.lastName = lastName
+Person = namedtuple("Person", ["firstName", "lastName"])
 
 
 class SpikeTest(ConcordionTestCase):
