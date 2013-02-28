@@ -14,4 +14,5 @@ class SpikeTest(ConcordionTestCase):
         pass
 
     def getPeople(self):
+        1/0
         return [Person("John", "Travolta"), Person("Frank", "Zappa")]

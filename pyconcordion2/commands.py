@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
-
 from collections import OrderedDict
+import traceback
+
 from lxml import etree
 
 import expression_parser
@@ -191,11 +192,34 @@ def mark_status(is_successful, element, actual_value=None):
         element.insert(1, actual)
 
 
-def mark_exception(element, e):
-    exception_element = etree.Element("p", **{"class": "failure"})
+__exception_index = 1
+
+
+def mark_exception(target_element, e):
+    exception_element = etree.Element("span", **{"class": "exceptionMessage"})
     exception_element.text = unicode(e)
-    parent = element.getparent()
-    parent.insert(parent.index(element) + 1, exception_element)  # we insert the exception after the element in question
+
+    input_element = etree.Element("input",
+                                  **{"class": "stackTraceButton", "data-exception-index": unicode(__exception_index),
+                                     "type": "button", "value": "Toggle Stack"})
+
+    stacktrace_div_element = etree.Element("div", **{"class": "stackTrace {}".format(__exception_index)})
+    p_tag = etree.Element("p")
+    p_tag.text = "Traceback:"
+    stacktrace_div_element.append(p_tag)
+    tb = traceback.format_exc()
+    for line in tb.splitlines():
+        trace_element = etree.Element("div", **{"class": "stackTraceEntry"})
+        trace_element.text = line
+        stacktrace_div_element.append(trace_element)
+
+    parent = target_element.getparent()
+    # we insert the exception after the element in question
+    for i, element in enumerate((exception_element, input_element, stacktrace_div_element)):
+        parent.insert(parent.index(target_element) + 1 + i, element)
+
+    global __exception_index
+    __exception_index += 1
 
 
 command_mapper = {

@@ -34,18 +34,22 @@ class ConcordionTestCase(unittest.TestCase):
 
     def __write(self, filename, tree):
         css_path = os.path.join(os.path.dirname(__file__), "resources", "css", "embedded.css")
-        try:
-            css = open(css_path, "rU").read()
-        except:
-            css = ""
+        jquery_path = os.path.join(os.path.dirname(__file__), "resources", "js", "jquery-1.9.1.min.js")
+        js_path = os.path.join(os.path.dirname(__file__), "resources", "js", "main.js")
 
         with open(os.path.join(TEMP_DIR, os.path.basename(filename)), "w") as f:
             print "Saving to:\n%s" % f.name
-            css_tag = etree.Element("style", type="text/css")
-            css_tag.text = css
+            css_tag = etree.Element("link", rel="stylesheet", href=css_path)
+
+            js_tag = etree.Element("script", src=js_path)
+            js_tag.text = " "
+            jquery_tag = etree.Element("script", src=jquery_path)
+            jquery_tag.text = " "
 
             tree.getroot().insert(0, css_tag)
-            f.write(etree.tostring(tree))
+            tree.getroot().append(jquery_tag)
+            tree.getroot().append(js_tag)
+            f.write(etree.tostring(tree, pretty_print=True))
 
     def __report_test_summary(self, tree):
         if tree.xpath("//@class='failure'") or tree.xpath("//@class='missing'"):
