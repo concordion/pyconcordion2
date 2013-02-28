@@ -1,4 +1,11 @@
 language: python
+
+env:
+  global:
+    - REPO="johnjiang/pyconcordion2"
+    - CI_HOME=`pwd`/$REPO
+    - PYTHON_PATH="$PYTHONPATH:$CI_HOME/pyconcordion2"
+
 python:
   - "2.7"
 # command to install dependencies

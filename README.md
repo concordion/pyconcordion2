@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/johnjiang/pyconcordion2.png)](https://travis-ci.org/johnjiang/pyconcordion2)
+
 pyconcordion2
 =============
 
