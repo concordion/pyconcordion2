@@ -1,6 +1,10 @@
 from __future__ import unicode_literals
 from collections import OrderedDict
+import imp
+import inspect
+import os
 import traceback
+import unittest
 
 from lxml import etree
 
@@ -53,6 +57,9 @@ class Commander(object):
             namespace=CONCORDION_NAMESPACE))
 
     def __find_th_index(self, element):
+        """
+        Returns the index of the given table header cell
+        """
         parent = element.getparent()
         for index, th_element in enumerate(parent.xpath("th")):
             if th_element == element:
@@ -99,7 +106,23 @@ class Command(object):
 
 
 class RunCommand(Command):
-    pass
+    def _run(self):
+        href = self.element.attrib["href"].replace(".html", "")
+        f = inspect.getfile(self.context.__class__)
+        file_path = os.path.join(os.path.dirname(os.path.abspath(f)), href + ".py")
+        try:
+            test_class = imp.load_source("Test", file_path)
+        except Exception:
+            file_path = os.path.join(os.path.dirname(os.path.abspath(f)), href + "Test.py")
+            test_class = imp.load_source("Test", file_path)
+
+        root, ext = os.path.splitext(os.path.basename(file_path))
+
+        try:
+            result = unittest.TextTestRunner().run(getattr(test_class, root)())
+        except Exception:
+            result = False
+        mark_status(result, self.element)
 
 
 class ExecuteCommand(Command):

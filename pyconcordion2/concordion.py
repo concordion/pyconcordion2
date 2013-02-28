@@ -12,13 +12,14 @@ TEMP_DIR = tempfile.gettempdir()
 
 
 class ConcordionTestCase(unittest.TestCase):
-    def test_fixture(self):
+    def runTest(self):
         filename = self.__find_spec()
 
         runner = Commander(self, filename)
         runner.process()
         self.__write(filename, runner.tree)
         self.__report_test_summary(runner.tree)
+        return True
 
     def __find_spec(self):
         """
