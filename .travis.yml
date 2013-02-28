@@ -4,7 +4,7 @@ env:
   global:
     - REPO="johnjiang/pyconcordion2"
     - CI_HOME=`pwd`/$REPO
-    - PYTHON_PATH="$PYTHONPATH:$CI_HOME/pyconcordion2"
+    - PYTHONPATH="$CI_HOME/pyconcordion2:$PYTHONPATH"
 
 python:
   - "2.7"
