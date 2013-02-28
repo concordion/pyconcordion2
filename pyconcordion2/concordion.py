@@ -52,5 +52,6 @@ class ConcordionTestCase(unittest.TestCase):
             f.write(etree.tostring(tree, pretty_print=True))
 
     def __report_test_summary(self, tree):
-        if tree.xpath("//@class='failure'") or tree.xpath("//@class='missing'"):
+        if (tree.xpath("//@class='failure'") or tree.xpath("//@class='missing'") or
+                tree.xpath("//@class='exceptionMessage'")):
             raise AssertionError("Test failed")

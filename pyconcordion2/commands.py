@@ -196,6 +196,7 @@ __exception_index = 1
 
 
 def mark_exception(target_element, e):
+    global __exception_index
     exception_element = etree.Element("span", **{"class": "exceptionMessage"})
     exception_element.text = unicode(e)
 
@@ -218,7 +219,6 @@ def mark_exception(target_element, e):
     for i, element in enumerate((exception_element, input_element, stacktrace_div_element)):
         parent.insert(parent.index(target_element) + 1 + i, element)
 
-    global __exception_index
     __exception_index += 1
 
 
