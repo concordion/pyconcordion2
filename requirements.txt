@@ -1,2 +1,2 @@
 lxml
-pyparsing
+pyparsing==1.5.7
