@@ -100,6 +100,7 @@ class Command(object):
 
     def run(self):
         try:
+            self.context.TEXT = self.element.text
             self._run()
         except Exception as e:
             mark_exception(self.element, e)

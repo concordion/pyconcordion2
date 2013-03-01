@@ -13,7 +13,7 @@ should be displayed for <b concordion:set="#name">David</b>
 when he logs in. 
 </p>
 
-<p concordion:execute="doSomething()"/>
+<p concordion:execute="doSomething(#TEXT)">Doing something</p>
 
 <table concordion:verifyRows="#person = getPeople()">
     <tr>

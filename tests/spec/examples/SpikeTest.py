@@ -10,7 +10,7 @@ class SpikeTest(ConcordionTestCase):
     def getGreetingFor(self, name):
         return "Hello %s!" % name
 
-    def doSomething(self):
+    def doSomething(self, text):
         pass
 
     def getPeople(self):
