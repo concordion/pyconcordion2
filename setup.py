@@ -1,10 +1,9 @@
 from setuptools import setup, find_packages
-import sys, os
+import pyconcordion2
 
-version = '0.11'
 
 setup(name='pyconcordion2',
-      version=version,
+      version=pyconcordion2.__version__,
       description="Concordion Python Port",
       long_description="""\
 """,
