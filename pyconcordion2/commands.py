@@ -102,6 +102,7 @@ class Command(object):
         try:
             self.context.TEXT = self.element.text
             self._run()
+            return True
         except Exception as e:
             mark_exception(self.element, e)
 
@@ -110,20 +111,21 @@ class RunCommand(Command):
     def _run(self):
         href = self.element.attrib["href"].replace(".html", "")
         f = inspect.getfile(self.context.__class__)
-        file_path = os.path.join(os.path.dirname(os.path.abspath(f)), href + ".py")
+        file_path = os.path.join(os.path.dirname(os.path.abspath(f)), href)
         try:
-            test_class = imp.load_source("Test", file_path)
+            src_file_path = file_path + ".py"
+            test_class = imp.load_source("Test", src_file_path)
         except Exception:
-            file_path = os.path.join(os.path.dirname(os.path.abspath(f)), href + "Test.py")
-            test_class = imp.load_source("Test", file_path)
+            src_file_path = file_path + "Test.py"
+            test_class = imp.load_source("Test", src_file_path)
 
-        root, ext = os.path.splitext(os.path.basename(file_path))
+        root, ext = os.path.splitext(os.path.basename(src_file_path))
 
-        try:
-            result = unittest.TextTestRunner().run(getattr(test_class, root)())
-        except Exception:
-            result = False
-        mark_status(result, self.element)
+        result = unittest.TextTestRunner().run(getattr(test_class, root)())
+        if result.failures or result.errors:
+            mark_status(False, self.element)
+        else:
+            mark_status(True, self.element)
 
 
 class ExecuteCommand(Command):
