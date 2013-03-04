@@ -121,7 +121,9 @@ class RunCommand(Command):
 
         root, ext = os.path.splitext(os.path.basename(src_file_path))
 
-        result = unittest.TextTestRunner().run(getattr(test_class, root)())
+        test_class = getattr(test_class, root)()
+        test_class.extra_folder = os.path.dirname(href)
+        result = unittest.TextTestRunner().run(test_class)
         if result.failures or result.errors:
             mark_status(False, self.element)
         else:

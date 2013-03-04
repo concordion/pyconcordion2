@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+import inspect
 import os
 import tempfile
 import unittest
@@ -12,6 +13,8 @@ TEMP_DIR = tempfile.gettempdir()
 
 
 class ConcordionTestCase(unittest.TestCase):
+    extra_folder = "."
+
     def runTest(self):
         filename = self.__find_spec()
 
@@ -25,10 +28,9 @@ class ConcordionTestCase(unittest.TestCase):
         """
         We find the filename of the spec based on the name of the test. If the class ends in "test" we remove it.
         """
-        filename = self.__class__.__name__
+        filename, ext = os.path.splitext(inspect.getfile(self.__class__))
         if filename[-4:].lower() == "test":
             filename = filename[:-4]
-        filename, ext = os.path.splitext(os.path.realpath(filename))
         filename += ".html"
         with open(filename):  # will raise exception if it doesn't exist
             return filename
@@ -38,7 +40,11 @@ class ConcordionTestCase(unittest.TestCase):
         jquery_path = os.path.join(os.path.dirname(__file__), "resources", "js", "jquery-1.9.1.min.js")
         js_path = os.path.join(os.path.dirname(__file__), "resources", "js", "main.js")
 
-        with open(os.path.join(TEMP_DIR, os.path.basename(filename)), "w") as f:
+        output_dir = os.path.join(TEMP_DIR, self.extra_folder)
+        if not os.path.isdir(output_dir):
+            os.makedirs(output_dir)
+
+        with open(os.path.join(output_dir, os.path.basename(filename)), "w") as f:
             print "Saving to:\n%s" % f.name
             css_tag = etree.Element("link", rel="stylesheet", href=css_path)
 
