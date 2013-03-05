@@ -16,6 +16,10 @@ class ConcordionTestCase(unittest.TestCase):
     extra_folder = "."
 
     def runTest(self):
+        # hack to prevent the base class to be run
+        if self.__class__.__name__ == ConcordionTestCase.__name__:
+            return True
+
         filename = self.__find_spec()
 
         runner = Commander(self, filename)
