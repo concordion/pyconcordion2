@@ -2,14 +2,17 @@ from __future__ import unicode_literals
 from collections import OrderedDict
 import imp
 import inspect
+from io import BytesIO
 import os
 import traceback
 import unittest
 
 from lxml import etree
+from lxml import html
 
 import expression_parser
 
+truth_values = ['true', '1', 't', 'y', 'yes']
 
 CONCORDION_NAMESPACE = "http://www.concordion.org/2007/concordion"
 
@@ -172,13 +175,14 @@ class SetCommand(Command):
     def _run(self):
         expression = expression_parser.parse(self.expression_str)
         assert expression.variable_name
-        setattr(self.context, self.expression_str, self.element.text)
+        tag_html = html.parse(BytesIO(etree.tostring(self.element))).getroot().getchildren()[0].getchildren()[0]
+        setattr(self.context, self.expression_str, tag_html.text_content())
 
 
 class AssertEqualsCommand(Command):
     def _run(self):
         expression_return = expression_parser.execute_within_context(self.context, self.expression_str)
-        result = unicode(expression_return) == "" if self.element.text is None else unicode(self.element.text)
+        result = unicode(expression_return) == ("" if self.element.text is None else unicode(self.element.text))
         if result:
             mark_status(result, self.element)
         else:
