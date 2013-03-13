@@ -176,7 +176,7 @@ class SetCommand(Command):
         expression = expression_parser.parse(self.expression_str)
         assert expression.variable_name
         tag_html = html.parse(BytesIO(etree.tostring(self.element))).getroot().getchildren()[0].getchildren()[0]
-        setattr(self.context, self.expression_str, tag_html.text_content())
+        setattr(self.context, self.expression_str, str(tag_html.text_content()))
 
 
 class AssertEqualsCommand(Command):

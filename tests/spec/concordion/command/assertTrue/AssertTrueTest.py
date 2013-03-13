@@ -7,4 +7,5 @@ class AssertTrueTest(ConcordionTestCase):
     def successOrFailure(self, snippet, outcome):
         t = TestRig()
         t.stub_result(text_to_bool(outcome))
-        return "SUCCESS" if t.process_fragment(snippet) else "FAILURE"
+        t.process_fragment(snippet)
+        return t.success_or_failure()

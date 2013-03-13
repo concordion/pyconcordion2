@@ -7,4 +7,5 @@ class AssertEqualsTest(ConcordionTestCase):
     def successOrFailure(self, snippet, outcome):
         t = TestRig()
         t.stub_result(outcome)
-        return "SUCCESS" if t.process_fragment(snippet) else "FAILURE"
+        t.process_fragment(snippet)
+        return t.success_or_failure()

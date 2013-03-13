@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 import unittest
 
-import expression_parser
+from pyconcordion2 import expression_parser
 
 
 class ExpressionParserTest(unittest.TestCase):
