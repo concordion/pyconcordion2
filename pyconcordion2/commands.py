@@ -223,10 +223,13 @@ def mark_status(is_successful, element, actual_value=None):
         expected = etree.Element("del", **{"class": "expected"})
         for child in element.getchildren():
             expected.append(child)
+        expected.text = element.text
+        expected.tail = element.tail
 
+        element.text = None
+        element.tail = None
         element.insert(0, expected)
         element.insert(1, actual)
-        pass
 
 
 __exception_index = 1
