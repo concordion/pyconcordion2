@@ -1,5 +1,4 @@
 from __future__ import unicode_literals
-from collections import namedtuple
 from io import StringIO
 
 from mock import Mock, patch
@@ -13,7 +12,14 @@ def text_to_bool(text):
     return False
 
 
-Results = namedtuple("Results", ["successCount", "failureCount", "exceptionCount"])
+class Results(object):
+    def __init__(self, successCount, failureCount, exceptionCount):
+        self.successCount = successCount
+        self.failureCount = failureCount
+        self.exceptionCount = exceptionCount
+
+    def has_failed(self):
+        return self.failureCount or self.exceptionCount
 
 
 class TestRig(object):

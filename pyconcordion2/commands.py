@@ -171,18 +171,22 @@ def get_table_body_rows(table):
     return [tr for tr in tr_s if tr.xpath("td")]
 
 
+def get_element_content(element):
+    tag_html = html.parse(BytesIO(etree.tostring(element))).getroot().getchildren()[0].getchildren()[0]
+    return unicode(tag_html.text_content())
+
+
 class SetCommand(Command):
     def _run(self):
         expression = expression_parser.parse(self.expression_str)
         assert expression.variable_name
-        tag_html = html.parse(BytesIO(etree.tostring(self.element))).getroot().getchildren()[0].getchildren()[0]
-        setattr(self.context, self.expression_str, str(tag_html.text_content()))
+        setattr(self.context, self.expression_str, get_element_content(self.element))
 
 
 class AssertEqualsCommand(Command):
     def _run(self):
         expression_return = expression_parser.execute_within_context(self.context, self.expression_str)
-        result = unicode(expression_return) == ("" if self.element.text is None else unicode(self.element.text))
+        result = unicode(expression_return) == get_element_content(self.element)
         if result:
             mark_status(result, self.element)
         else:
@@ -212,16 +216,17 @@ def mark_status(is_successful, element, actual_value=None):
     else:
         element.attrib["class"] = "failure"
 
-    if actual_value:
         actual = etree.Element("ins", **{"class": "actual"})
         actual.text = unicode(actual_value)
 
+        # we move child elements from element into our new del container
         expected = etree.Element("del", **{"class": "expected"})
-        expected.text = element.text
+        for child in element.getchildren():
+            expected.append(child)
 
-        element.text = None
         element.insert(0, expected)
         element.insert(1, actual)
+        pass
 
 
 __exception_index = 1

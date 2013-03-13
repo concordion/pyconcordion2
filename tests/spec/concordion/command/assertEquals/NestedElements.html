@@ -18,8 +18,8 @@
 &lt;span concordion:assertEquals="#fullName"&gt;Fred &lt;strong&gt;Bloggs&lt;/strong&gt;&lt;/span&gt; 
 </pre>
 
-        <p concordion:execute="#matchOrNotMatch = matchOrNotMatch(#snippet, #evaluationResult)">
-            Will <span concordion:assertEquals="#matchOrNotMatch">match</span>
+        <p concordion:execute="#outcome = matchOrNotMatch(#snippet, #evaluationResult)">
+            Will <span concordion:assertEquals="#outcome">match</span>
             the evaluation result "<code concordion:set="#evaluationResult">Fred Bloggs</code>".
         </p>
     </div>
