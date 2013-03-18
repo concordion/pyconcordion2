@@ -4,6 +4,7 @@ import imp
 import inspect
 from io import BytesIO
 import os
+import re
 import traceback
 import unittest
 
@@ -171,9 +172,15 @@ def get_table_body_rows(table):
     return [tr for tr in tr_s if tr.xpath("td")]
 
 
+def normalize(text):
+    pattern = re.compile(r'\s+')  # treat all whitespace as spaces
+    return re.sub(pattern, ' ', text).strip()
+
+
 def get_element_content(element):
     tag_html = html.parse(BytesIO(etree.tostring(element))).getroot().getchildren()[0].getchildren()[0]
-    return unicode(tag_html.text_content())
+    result = unicode(tag_html.text_content()).replace(" _\n", "").strip()  # support for python style line breaks
+    return normalize(result)
 
 
 class SetCommand(Command):

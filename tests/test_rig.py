@@ -21,6 +21,9 @@ class Results(object):
     def has_failed(self):
         return self.failureCount or self.exceptionCount
 
+    def has_succeeded(self):
+        return not self.has_failed()
+
 
 class TestRig(object):
     result = None
