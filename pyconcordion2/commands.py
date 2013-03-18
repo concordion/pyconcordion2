@@ -186,6 +186,9 @@ class SetCommand(Command):
 class AssertEqualsCommand(Command):
     def _run(self):
         expression_return = expression_parser.execute_within_context(self.context, self.expression_str)
+        if expression_return is None:
+            expression_return = "(None)"
+
         result = unicode(expression_return) == get_element_content(self.element)
         if result:
             mark_status(result, self.element)

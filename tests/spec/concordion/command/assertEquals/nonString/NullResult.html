@@ -2,11 +2,11 @@
 <link href="../../../../../concordion.css" rel="stylesheet" type="text/css" />
 <body>
 
-    <h1>Null Result</h1>
+    <h1>None Result</h1>
     
     <p>
-       If the evaluation result is <code>null</code> then the string
-       "(null)" is used for performing the comparison.
+       If the evaluation result is <code>None</code> then the string
+       "(None)" is used for performing the comparison.
     </p>
     
     <div class="example">        
@@ -24,18 +24,18 @@
                 <th concordion:assertEquals="#outcome">Outcome</th>
             </tr>
             <tr>
-                <td>null</td>
-                <td>(null)</td>
+                <td>None</td>
+                <td>(None)</td>
                 <td>SUCCESS</td>
             </tr>
             <tr>
-                <td>null</td>
+                <td>None</td>
                 <td>xyz</td>
                 <td>FAILURE</td>
             </tr>
             <tr>
-                <td>null</td>
-                <td>null</td>
+                <td>None</td>
+                <td>None</td>
                 <td>FAILURE</td>
             </tr>
         </table>
