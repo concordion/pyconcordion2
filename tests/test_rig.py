@@ -12,11 +12,35 @@ def text_to_bool(text):
     return False
 
 
+class ResultEvent(object):
+    def __init__(self, actual, expected):
+        self.actual = actual
+        self.expected = expected
+
+
 class Results(object):
-    def __init__(self, successCount, failureCount, exceptionCount):
-        self.successCount = successCount
-        self.failureCount = failureCount
-        self.exceptionCount = exceptionCount
+    def __init__(self, successes, failures, exceptions):
+        self.successes = successes
+        self.failures = failures
+        self.exceptions = exceptions
+
+    def last_failed_event(self):
+        last_failed = self.failures[-1]
+        actual = last_failed.xpath("//*[@class='actual']")[0].text
+        expected = last_failed.xpath("//*[@class='expected']")[0].text
+        return ResultEvent(actual, expected)
+
+    @property
+    def failureCount(self):
+        return len(self.failures)
+
+    @property
+    def exceptionCount(self):
+        return len(self.exceptions)
+
+    @property
+    def successCount(self):
+        return len(self.successes)
 
     def has_failed(self):
         return self.failureCount or self.exceptionCount
@@ -50,13 +74,12 @@ class TestRig(object):
         commander.process()
         tree = commander.tree
 
-        success = tree.xpath("//*[@class='success']")
+        successes = tree.xpath("//*[@class='success']")
         failures = tree.xpath("//*[@class='failure']")
         missing = tree.xpath("//*[@class='missing']")
         exceptions = tree.xpath("//*[@class='exceptionMessage']")
 
-        self.result = Results(failureCount=len(failures + missing), successCount=len(success),
-                              exceptionCount=len(exceptions))
+        self.result = Results(failures=failures, successes=successes, exceptions=exceptions)
 
         if self.patcher:
             self.patcher.stop()

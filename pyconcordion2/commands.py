@@ -104,7 +104,7 @@ class Command(object):
 
     def run(self):
         try:
-            self.context.TEXT = self.element.text
+            self.context.TEXT = get_element_content(self.element)
             self._run()
             return True
         except Exception as e:
@@ -186,8 +186,10 @@ def get_element_content(element):
 class SetCommand(Command):
     def _run(self):
         expression = expression_parser.parse(self.expression_str)
-        assert expression.variable_name
-        setattr(self.context, self.expression_str, get_element_content(self.element))
+        if expression.function_name:  # concordion:set="blah = function(#TEXT)"
+            expression_parser.execute_within_context(self.context, self.expression_str)
+        else:
+            setattr(self.context, expression.variable_name, get_element_content(self.element))
 
 
 class AssertEqualsCommand(Command):
@@ -234,10 +236,8 @@ def mark_status(is_successful, element, actual_value=None):
         for child in element.getchildren():
             expected.append(child)
         expected.text = element.text
-        expected.tail = element.tail
-
         element.text = None
-        element.tail = None
+
         element.insert(0, expected)
         element.insert(1, actual)
 
