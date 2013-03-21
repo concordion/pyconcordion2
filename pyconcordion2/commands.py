@@ -18,6 +18,45 @@ truth_values = ['true', '1', 't', 'y', 'yes']
 CONCORDION_NAMESPACE = "http://www.concordion.org/2007/concordion"
 
 
+class ResultEvent(object):
+    def __init__(self, actual, expected):
+        self.actual = actual
+        self.expected = expected
+
+
+class Result(object):
+    def __init__(self, tree):
+        self.root_element = tree
+        self.successes = tree.xpath("//*[contains(concat(' ', @class, ' '), ' success ')]")
+        self.failures = tree.xpath("//*[contains(concat(' ', @class, ' '), ' failure ')]")
+        self.missing = tree.xpath("//*[contains(concat(' ', @class, ' '), ' missing ')]")
+        self.exceptions = tree.xpath("//*[contains(concat(' ', @class, ' '), ' exceptionMessage ')]")
+
+    def last_failed_event(self):
+        last_failed = self.failures[-1]
+        actual = last_failed.xpath("//*[@class='actual']")[0].text
+        expected = last_failed.xpath("//*[@class='expected']")[0].text
+        return ResultEvent(actual, expected)
+
+    @property
+    def failureCount(self):
+        return len(self.failures)
+
+    @property
+    def exceptionCount(self):
+        return len(self.exceptions)
+
+    @property
+    def successCount(self):
+        return len(self.successes)
+
+    def has_failed(self):
+        return bool(self.failureCount or self.exceptionCount)
+
+    def has_succeeded(self):
+        return not self.has_failed()
+
+
 class Commander(object):
     def __init__(self, test, filename):
         self.test = test
@@ -52,6 +91,7 @@ class Commander(object):
                 self.__add_to_commands_dict(command)
 
         self.__run_commands()
+        self.result = Result(self.tree)
 
     def __find_concordion_elements(self):
         """
@@ -208,13 +248,13 @@ class AssertEqualsCommand(Command):
 class AssertTrueCommand(Command):
     def _run(self):
         result = expression_parser.execute_within_context(self.context, self.expression_str)
-        mark_status(result, self.element)
+        mark_status(result, self.element, "== false")
 
 
 class AssertFalseCommand(Command):
     def _run(self):
         result = expression_parser.execute_within_context(self.context, self.expression_str)
-        mark_status(not result, self.element)
+        mark_status(not result, self.element, "== true")
 
 
 class EchoCommand(Command):
@@ -223,13 +263,16 @@ class EchoCommand(Command):
 
 
 def mark_status(is_successful, element, actual_value=None):
+    if not get_element_content(element):  # set non-breaking space if element is empty
+        element.text = "\u00A0"
+
     if is_successful:
-        element.attrib["class"] = "success"
+        element.attrib["class"] = (element.attrib.get("class", "") + " success").strip()
     else:
-        element.attrib["class"] = "failure"
+        element.attrib["class"] = (element.attrib.get("class", "") + " failure").strip()
 
         actual = etree.Element("ins", **{"class": "actual"})
-        actual.text = unicode(actual_value)
+        actual.text = unicode(actual_value or "\u00A0")  # blank space if no value
 
         # we move child elements from element into our new del container
         expected = etree.Element("del", **{"class": "expected"})

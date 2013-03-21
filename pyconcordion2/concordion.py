@@ -25,8 +25,7 @@ class ConcordionTestCase(unittest.TestCase):
         runner = Commander(self, filename)
         runner.process()
         self.__write(filename, runner.tree)
-        self.__report_test_summary(runner.tree)
-        return True
+        self.assertTrue(runner.result.has_succeeded())
 
     def __find_spec(self):
         """
@@ -61,11 +60,3 @@ class ConcordionTestCase(unittest.TestCase):
             tree.getroot().append(jquery_tag)
             tree.getroot().append(js_tag)
             f.write(etree.tostring(tree, pretty_print=True))
-
-    def __report_test_summary(self, tree):
-        failures = tree.xpath("//@class='failure'")
-        missing = tree.xpath("//@class='missing'")
-        exceptions = tree.xpath("//@class='exceptionMessage'")
-
-        if failures or missing or exceptions:
-            raise AssertionError

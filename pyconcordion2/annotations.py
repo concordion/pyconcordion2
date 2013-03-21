@@ -1,0 +1,2 @@
+def ExpectedToFail(fn):
+    pass

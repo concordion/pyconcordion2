@@ -1,0 +1,13 @@
+from __future__ import unicode_literals
+from pyconcordion2 import ConcordionTestCase
+from test_rig import TestRig
+
+
+class FailureTest(ConcordionTestCase):
+    def isPalindrome(self, s):
+        return s == s[::-1]
+
+    def render(self, fragment):
+        rig = TestRig(fixture=self)
+        rig.process_fragment(fragment)
+        return rig.get_output_fragment_xml()
