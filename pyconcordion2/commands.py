@@ -163,7 +163,7 @@ class Commander(object):
         head = self.tree.xpath("//head")[0]
         style_tag = etree.Element("style", type="text/css")
         style_tag.text = css_contents
-        head.append(style_tag)
+        head.insert(0, style_tag)
 
         js_tag = etree.Element("script", src=js_path)
         js_tag.text = " "
