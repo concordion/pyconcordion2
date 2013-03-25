@@ -1,2 +1,3 @@
 def ExpectedToFail(fn):
-    pass
+    test = fn()
+    test.runTest()

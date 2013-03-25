@@ -91,6 +91,7 @@ class Commander(object):
                 self.__add_to_commands_dict(command)
 
         self.__run_commands()
+        self.__postprocess_tree()
         self.result = Result(self.tree)
 
     def __find_concordion_elements(self):
@@ -130,6 +131,47 @@ class Commander(object):
         """
         for element, command in self.commands.items():
             command.run()
+
+    def __postprocess_tree(self):
+        css_path = os.path.join(os.path.dirname(__file__), "resources", "css", "embedded.css")
+        css_contents = open(css_path, "rU").read()
+
+        jquery_path = os.path.join(os.path.dirname(__file__), "resources", "js", "jquery-1.9.1.min.js")
+        js_path = os.path.join(os.path.dirname(__file__), "resources", "js", "main.js")
+
+        meta = etree.Element("meta")
+        meta.attrib["http-equiv"] = "content-type"
+        meta.attrib["content"] = "text/html; charset=UTF-8"
+        meta.tail = "\n"
+
+        head = self.tree.xpath("//head")
+        if head:
+            head[0].insert(0, meta)
+        else:
+            head = etree.Element("head")
+            head.text = "\n"
+            head.append(meta)
+
+            for child in self.tree.getroot().getchildren():
+                if child.tag == "body":
+                    break
+                head.append(child)
+            head.tail = "\n"
+
+            self.tree.getroot().insert(0, head)
+
+        head = self.tree.xpath("//head")[0]
+        style_tag = etree.Element("style", type="text/css")
+        style_tag.text = css_contents
+        head.append(style_tag)
+
+        js_tag = etree.Element("script", src=js_path)
+        js_tag.text = " "
+        jquery_tag = etree.Element("script", src=jquery_path)
+        jquery_tag.text = " "
+
+        self.tree.getroot().append(jquery_tag)
+        self.tree.getroot().append(js_tag)
 
 
 class Command(object):
@@ -213,14 +255,15 @@ def get_table_body_rows(table):
 
 
 def normalize(text):
+    text = unicode(text)
+    text = text.replace(" _\n", "")  # support for python style line breaks
     pattern = re.compile(r'\s+')  # treat all whitespace as spaces
     return re.sub(pattern, ' ', text).strip()
 
 
 def get_element_content(element):
     tag_html = html.parse(BytesIO(etree.tostring(element))).getroot().getchildren()[0].getchildren()[0]
-    result = unicode(tag_html.text_content()).replace(" _\n", "").strip()  # support for python style line breaks
-    return normalize(result)
+    return normalize(tag_html.text_content())
 
 
 class SetCommand(Command):
@@ -238,7 +281,7 @@ class AssertEqualsCommand(Command):
         if expression_return is None:
             expression_return = "(None)"
 
-        result = unicode(expression_return) == get_element_content(self.element)
+        result = normalize(expression_return) == get_element_content(self.element)
         if result:
             mark_status(result, self.element)
         else:
@@ -259,7 +302,13 @@ class AssertFalseCommand(Command):
 
 class EchoCommand(Command):
     def _run(self):
-        return expression_parser.execute_within_context(self.context, self.expression_str)
+        result = expression_parser.execute_within_context(self.context, self.expression_str)
+        if result is not None:
+            self.element.text = result
+        else:
+            em = etree.Element("em")
+            em.text = "None"
+            self.element.append(em)
 
 
 def mark_status(is_successful, element, actual_value=None):

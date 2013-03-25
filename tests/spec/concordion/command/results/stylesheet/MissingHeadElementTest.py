@@ -6,7 +6,7 @@ from pyconcordion2 import ConcordionTestCase
 from test_rig import TestRig
 
 
-class ContentTypeTest(ConcordionTestCase):
+class MissingHeadElementTest(ConcordionTestCase):
     def process(self, html):
         result = TestRig().process_html(html)
         self.remove_irrelevant_elements(result.root_element)
@@ -15,6 +15,7 @@ class ContentTypeTest(ConcordionTestCase):
     def remove_irrelevant_elements(self, root_element):
         self.remove_irrelevant_stylesheet(root_element)
         self.remove_script_elements(root_element)
+        self.remove_meta(root_element)
 
     def remove_script_elements(self, root_element):
         for script in root_element.xpath("//script"):
@@ -24,3 +25,7 @@ class ContentTypeTest(ConcordionTestCase):
         head = root_element.xpath("//head")[0]
         style = head.xpath("//style")[0]
         head.remove(style)
+
+    def remove_meta(self, root_element):
+        for meta in root_element.xpath("//meta"):
+            meta.getparent().remove(meta)
