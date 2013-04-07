@@ -1,8 +1,10 @@
 from __future__ import unicode_literals
 from collections import OrderedDict
+from io import BytesIO
+from operator import attrgetter
 import imp
 import inspect
-from io import BytesIO
+import itertools
 import os
 import re
 import traceback
@@ -136,8 +138,8 @@ class Commander(object):
         css_path = os.path.join(os.path.dirname(__file__), "resources", "css", "embedded.css")
         css_contents = open(css_path, "rU").read()
 
-        jquery_path = os.path.join(os.path.dirname(__file__), "resources", "js", "jquery-1.9.1.min.js")
         js_path = os.path.join(os.path.dirname(__file__), "resources", "js", "main.js")
+        js_contents = open(js_path, "rU").read()
 
         meta = etree.Element("meta")
         meta.attrib["http-equiv"] = "content-type"
@@ -165,9 +167,9 @@ class Commander(object):
         style_tag.text = css_contents
         head.insert(0, style_tag)
 
-        js_tag = etree.Element("script", src=js_path)
-        js_tag.text = " "
-        jquery_tag = etree.Element("script", src=jquery_path)
+        js_tag = etree.Element("script")
+        js_tag.text = js_contents
+        jquery_tag = etree.Element("script", src="http://code.jquery.com/jquery-1.9.1.min.js")
         jquery_tag.text = " "
 
         self.tree.getroot().append(jquery_tag)
@@ -208,7 +210,7 @@ class RunCommand(Command):
         root, ext = os.path.splitext(os.path.basename(src_file_path))
 
         test_class = getattr(test_class, root)()
-        test_class.extra_folder = os.path.dirname(href)
+        test_class.extra_folder = os.path.dirname(os.path.join(self.context.extra_folder, href))
         result = unittest.TextTestRunner().run(test_class)
         if result.failures or result.errors:
             mark_status(False, self.element)
@@ -241,12 +243,22 @@ class VerifyRowsCommand(Command):
     def _run(self):
         variable_name = expression_parser.parse(self.expression_str).variable_name
         results = expression_parser.execute_within_context(self.context, self.expression_str)
-        for result, row in zip(results, get_table_body_rows(self.element)):
+        for result, row in itertools.izip_longest(results, get_table_body_rows(self.element)):
             setattr(self.context, variable_name, result)
+            if not row:
+                total_columns = max(self.children, key=attrgetter("index")).index + 1  # good enough but not perfect
+                row = etree.Element("tr", **{"class": "surplus"})
+                for _ in xrange(total_columns):
+                    etree.SubElement(row, "td")
+                self.element.append(row)
+
             for command in self.children:
                 element = row.xpath("td")[command.index]
                 command.element = element
-                command.run()
+                if result:
+                    command.run()
+                else:
+                    mark_status(is_successful=False, element=element, class_override="missing")
 
 
 def get_table_body_rows(table):
@@ -311,17 +323,17 @@ class EchoCommand(Command):
             self.element.append(em)
 
 
-def mark_status(is_successful, element, actual_value=None):
+def mark_status(is_successful, element, actual_value=None, class_override=None):
     if not get_element_content(element):  # set non-breaking space if element is empty
         element.text = "\u00A0"
 
     if is_successful:
         element.attrib["class"] = (element.attrib.get("class", "") + " success").strip()
     else:
-        element.attrib["class"] = (element.attrib.get("class", "") + " failure").strip()
+        element.attrib["class"] = (element.attrib.get("class", "") + " {}".format(class_override or "failure")).strip()
 
         actual = etree.Element("ins", **{"class": "actual"})
-        actual.text = unicode(actual_value or "\u00A0")  # blank space if no value
+        actual.text = unicode(actual_value) or "\u00A0"  # blank space if no value
 
         # we move child elements from element into our new del container
         expected = etree.Element("del", **{"class": "expected"})
