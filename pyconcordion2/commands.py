@@ -245,7 +245,7 @@ class VerifyRowsCommand(Command):
         results = expression_parser.execute_within_context(self.context, self.expression_str)
         for result, row in itertools.izip_longest(results, get_table_body_rows(self.element)):
             setattr(self.context, variable_name, result)
-            if not row:
+            if row is None:
                 total_columns = max(self.children, key=attrgetter("index")).index + 1  # good enough but not perfect
                 row = etree.Element("tr", **{"class": "surplus"})
                 for _ in xrange(total_columns):
@@ -333,7 +333,8 @@ def mark_status(is_successful, element, actual_value=None, class_override=None):
         element.attrib["class"] = (element.attrib.get("class", "") + " {}".format(class_override or "failure")).strip()
 
         actual = etree.Element("ins", **{"class": "actual"})
-        actual.text = unicode(actual_value) or "\u00A0"  # blank space if no value
+        if actual_value is not None:
+            actual.text = unicode(actual_value) or "\u00A0"  # blank space if no value
 
         # we move child elements from element into our new del container
         expected = etree.Element("del", **{"class": "expected"})
@@ -341,6 +342,7 @@ def mark_status(is_successful, element, actual_value=None, class_override=None):
             expected.append(child)
         expected.text = element.text
         element.text = None
+        expected.tail = "\n"
 
         element.insert(0, expected)
         element.insert(1, actual)
