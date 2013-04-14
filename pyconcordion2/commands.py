@@ -200,16 +200,18 @@ class RunCommand(Command):
         href = self.element.attrib["href"].replace(".html", "")
         f = inspect.getfile(self.context.__class__)
         file_path = os.path.join(os.path.dirname(os.path.abspath(f)), href)
-        try:
+
+        if os.path.exists(file_path + ".py"):
             src_file_path = file_path + ".py"
-            test_class = imp.load_source("Test", src_file_path)
-        except Exception:
+        elif os.path.exists(file_path + "Test.py"):
             src_file_path = file_path + "Test.py"
-            test_class = imp.load_source("Test", src_file_path)
+        else:
+            raise RuntimeError("Cannot find Python Test file")
 
-        root, ext = os.path.splitext(os.path.basename(src_file_path))
+        modname, ext = os.path.splitext(os.path.basename(src_file_path))
+        test_class = imp.load_source(modname, src_file_path)
 
-        test_class = getattr(test_class, root)()
+        test_class = getattr(test_class, modname)()
         test_class.extra_folder = os.path.dirname(os.path.join(self.context.extra_folder, href))
         result = unittest.TextTestRunner().run(test_class)
         if result.failures or result.errors:
