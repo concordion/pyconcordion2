@@ -257,7 +257,10 @@ class VerifyRowsCommand(Command):
                 row = etree.Element("tr", **{"class": "surplus"})
                 for _ in xrange(total_columns):
                     etree.SubElement(row, "td")
-                self.element.append(row)
+                if self.element.xpath("//tbody"):
+                    self.element.xpath("//tbody")[0].append(row)
+                else:
+                    self.element.append(row)
 
             for command in self.children:
                 element = row.xpath("td")[command.index]
@@ -266,7 +269,10 @@ class VerifyRowsCommand(Command):
 
 
 def get_table_body_rows(table):
-    tr_s = table.xpath("tr")
+    if table.xpath("//tbody"):
+        tr_s = table.xpath("//tbody/tr")
+    else:
+        tr_s = table.xpath("tr")
     return [tr for tr in tr_s if tr.xpath("td")]
 
 

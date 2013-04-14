@@ -9,7 +9,7 @@ class TableBodySupportTest(ConcordionTestCase):
         self.names = []
 
     def setUpNames(self, namesAsCSV):
-        self.names = namesAsCSV.split(", *")
+        self.names = namesAsCSV.split(", ")
 
     def getNames(self):
         return self.names
