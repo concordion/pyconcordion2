@@ -12,7 +12,7 @@ white_space_mapper = {
 }
 
 
-class WhiteSpaceTest(ConcordionTestCase):
+class WhitespaceTest(ConcordionTestCase):
     def whichSnippetsSucceed(self, snippet1, snippet2, evaluationResult):
         return self.which(self.succeeds(snippet1, evaluationResult), self.succeeds(snippet2, evaluationResult))
 

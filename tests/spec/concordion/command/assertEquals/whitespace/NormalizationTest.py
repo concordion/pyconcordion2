@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
-from spec.concordion.command.assertEquals.whitespace.WhiteSpaceTest import WhiteSpaceTest
+from spec.concordion.command.assertEquals.whitespace.WhitespaceTest import WhitespaceTest
 
 
-class NormalizationTest(WhiteSpaceTest):
+class NormalizationTest(WhitespaceTest):
     pass
