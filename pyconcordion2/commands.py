@@ -247,6 +247,11 @@ class VerifyRowsCommand(Command):
         results = expression_parser.execute_within_context(self.context, self.expression_str)
         for result, row in itertools.izip_longest(results, get_table_body_rows(self.element)):
             setattr(self.context, variable_name, result)
+
+            if result is None:
+                row.attrib["class"] = (row.attrib.get("class", "") + " missing").strip()
+                continue
+
             if row is None:
                 total_columns = max(self.children, key=attrgetter("index")).index + 1  # good enough but not perfect
                 row = etree.Element("tr", **{"class": "surplus"})
@@ -257,10 +262,7 @@ class VerifyRowsCommand(Command):
             for command in self.children:
                 element = row.xpath("td")[command.index]
                 command.element = element
-                if result:
-                    command.run()
-                else:
-                    mark_status(is_successful=False, element=element, class_override="missing")
+                command.run()
 
 
 def get_table_body_rows(table):
