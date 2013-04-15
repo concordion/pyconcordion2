@@ -5,7 +5,8 @@ from test_rig import TestRig
 
 
 class FailureTest(ConcordionTestCase):
-    acronym = None
+    def setUp(self):
+        self.acronym = None
 
     def renderAsFailure(self, fragment, acronym):
         self.acronym = acronym
