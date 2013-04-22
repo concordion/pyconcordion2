@@ -1,5 +1,5 @@
 import unittest
-from pyconcordion2 import ConcordionTestCase
+from case import ConcordionTestCase
 
 
 @unittest.expectedFailure

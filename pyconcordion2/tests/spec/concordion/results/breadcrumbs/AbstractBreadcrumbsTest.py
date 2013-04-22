@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 from lxml import etree
-from pyconcordion2 import ConcordionTestCase
+from case import ConcordionTestCase
 from test_rig import TestRig
 
 

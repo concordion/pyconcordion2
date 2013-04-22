@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 from collections import namedtuple
 
-from pyconcordion2 import ConcordionTestCase
+from case import ConcordionTestCase
 
 Person = namedtuple("Person", ["firstName", "lastName"])
 

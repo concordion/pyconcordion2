@@ -1,4 +1,4 @@
-from pyconcordion2 import ConcordionTestCase
+from case import ConcordionTestCase
 
 
 class ConcordionTest(ConcordionTestCase):
