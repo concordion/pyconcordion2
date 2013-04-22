@@ -34,6 +34,6 @@ nosetests.xml
 .project
 .pydevproject
 .idea/*
-pyconcordion2.iml
+*.iml
 
 .DS_Store
