@@ -135,10 +135,10 @@ class Commander(object):
             command.run()
 
     def __postprocess_tree(self):
-        css_path = os.path.join(os.path.dirname(__file__), "resources", "css", "embedded.css")
+        css_path = os.path.join(os.path.dirname(__file__), "resources", "embedded.css")
         css_contents = open(css_path, "rU").read()
 
-        js_path = os.path.join(os.path.dirname(__file__), "resources", "js", "main.js")
+        js_path = os.path.join(os.path.dirname(__file__), "resources", "main.js")
         js_contents = open(js_path, "rU").read()
 
         meta = etree.Element("meta")

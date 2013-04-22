@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 
 setup(name='pyconcordion2',
-      version="0.11.6",
+      version="0.11.8",
       description="Concordion Python Port",
       long_description="""\
 """,
