@@ -8,7 +8,7 @@ A python implementation of the Concordion Acceptance Testing framework.
 Installation
 ============
 
-`pip install pyconcordion2`
+`$ pip install pyconcordion2`
 
 Usage
 =====
