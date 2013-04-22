@@ -1,7 +1,7 @@
-from annotations import ExpectedToFail
+import unittest
 from pyconcordion2 import ConcordionTestCase
 
 
-# @ExpectedToFail
+@unittest.expectedFailure
 class AccessToLinkHrefTest(ConcordionTestCase):
     pass
