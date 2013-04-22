@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 
 setup(name='pyconcordion2',
-      version="0.11",
+      version="0.11.6",
       description="Concordion Python Port",
       long_description="""\
 """,
@@ -17,14 +17,14 @@ setup(name='pyconcordion2',
       packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
       package_data={
           'pyconcordion2': [
-              'resources/*/*.css',
-              'resources/*/*.js',
+              'resources/*.css',
+              'resources/*.js',
           ],
       },
       include_package_data=True,
       zip_safe=True,
       install_requires=[
-          'lxml', 'pyparsing', # -*- Extra requirements: -*-
+          'lxml', 'pyparsing', 'mock'  # -*- Extra requirements: -*-
       ],
       entry_points="""
       # -*- Entry points: -*-
