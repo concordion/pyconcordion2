@@ -3,7 +3,12 @@
 pyconcordion2
 =============
 
-A python fork of the Concordion Acceptance Testing framework.
+A python implementation of the Concordion Acceptance Testing framework.
+
+Installation
+============
+
+`pip install pyconcordion2`
 
 Usage
 =====
