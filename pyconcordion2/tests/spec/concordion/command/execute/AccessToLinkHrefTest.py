@@ -2,6 +2,7 @@ import unittest
 from case import ConcordionTestCase
 
 
-@unittest.expectedFailure
 class AccessToLinkHrefTest(ConcordionTestCase):
-    pass
+    @unittest.expectedFailure
+    def runTest(self):
+        super(AccessToLinkHrefTest, self).runTest()

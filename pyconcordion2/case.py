@@ -41,8 +41,7 @@ class ConcordionTestCase(unittest.TestCase):
             return filename
 
     def bread_crumbs(self):
-        class_path = os.path.abspath(inspect.getfile(self.__class__))
-        head, tail = os.path.split(class_path)
+        head, tail = os.path.split(self.file_path())
         crumbs = []
         while True:
             head, tail = os.path.split(head)
@@ -62,10 +61,9 @@ class ConcordionTestCase(unittest.TestCase):
         return crumbs
 
     def bread_crumb_tag(self):
-        file_path = os.path.abspath(inspect.getfile(self.__class__))
         span_tag = etree.Element("span", {"class": "breadcrumbs"})
         for crumb in self.bread_crumbs():
-            crumb_relpath = os.path.relpath(crumb, os.path.dirname(file_path))
+            crumb_relpath = os.path.relpath(crumb, os.path.dirname(self.file_path()))
             a_tag = etree.Element("a", href=crumb_relpath)
             a_tag.text = os.path.splitext(os.path.basename(crumb_relpath))[0]
             a_tag.tail = " > "
@@ -80,3 +78,6 @@ class ConcordionTestCase(unittest.TestCase):
         with open(os.path.join(output_dir, os.path.basename(filename)), "w") as f:
             print "Saving to:\n%s" % f.name
             f.write(etree.tostring(tree, pretty_print=True))
+
+    def file_path(self):
+        return os.path.abspath(inspect.getfile(self.__class__))
