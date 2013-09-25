@@ -6,12 +6,12 @@ pyconcordion2
 A python implementation of the Concordion Acceptance Testing framework.
 
 Installation
-============
+------------
 
 `$ pip install pyconcordion2`
 
 Usage
-=====
+-----
 
 Simply extend your python test cases from ConcordionTestCase
 
@@ -20,17 +20,17 @@ Simply extend your python test cases from ConcordionTestCase
 Execute as you would normal unittests.
 
 Issues
-======
+------
 
 Please raise them in Github. Pull requests very welcome.
 
 TODO
-====
+----
 
 Make pyconcordion2 pass the Concordion spec
 
 License
-=======
+-------
 
 Copyright 2013 John Jiang
 
@@ -46,6 +46,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
+Attribution
+-----------
+
+Thanks to the [Concordion team](http://www.concordion.org/) for making the original framework.
+
+Thanks to JC Plessis for making [pyconcordion python port](https://code.google.com/p/pyconcordion/)
+
 Donate Bitcoins
-===============
+---------------
+
 1AAzqUTiRR68hN81KU3YmtJFLbcmPVM53F
