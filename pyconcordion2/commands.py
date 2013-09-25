@@ -169,7 +169,7 @@ class Commander(object):
 
         js_tag = etree.Element("script")
         js_tag.text = js_contents
-        jquery_tag = etree.Element("script", src="http://code.jquery.com/jquery-1.9.1.min.js")
+        jquery_tag = etree.Element("script", src="http://code.jquery.com/jquery-1.10.1.min.js")
         jquery_tag.text = " "
 
         self.tree.getroot().append(jquery_tag)
