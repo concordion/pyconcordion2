@@ -1,4 +1,4 @@
-from case import ConcordionTestCase
+from base import ConcordionTestCase
 
 
 class IndexTest(ConcordionTestCase):

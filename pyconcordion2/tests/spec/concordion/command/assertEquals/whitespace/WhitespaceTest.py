@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 from commands import normalize
-from case import ConcordionTestCase
+from base import ConcordionTestCase
 from test_rig import TestRig
 
 

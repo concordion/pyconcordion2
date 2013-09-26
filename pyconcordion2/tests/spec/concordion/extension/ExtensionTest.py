@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 import unittest
-from case import ConcordionTestCase
+from base import ConcordionTestCase
 
 
 class ExtensionTest(ConcordionTestCase):

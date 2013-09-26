@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-from case import ConcordionTestCase
+from base import ConcordionTestCase
 from test_rig import TestRig
 from test_rig import text_to_bool
 

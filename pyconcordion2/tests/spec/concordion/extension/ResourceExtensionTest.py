@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-from case import ConcordionTestCase
+from base import ConcordionTestCase
 
 
 class ResourceExtensionTest(ConcordionTestCase):

@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 from lxml import etree
 
-from case import ConcordionTestCase
+from base import ConcordionTestCase
 from test_rig import TestRig
 
 
