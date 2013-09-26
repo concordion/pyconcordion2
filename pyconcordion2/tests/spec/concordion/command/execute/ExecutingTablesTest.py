@@ -7,9 +7,9 @@ class ExecutingTablesTest(ConcordionTestCase):
         r = TestRig(fixture=self).process_fragment(fragment)
 
         result = Result()
-        result.successCount = r.successCount
-        result.failureCount = r.failureCount
-        result.exceptionCount = r.exceptionCount
+        result.successCount = r.num_success
+        result.failureCount = r.num_failure
+        result.exceptionCount = r.num_exception
 
         lastEvent = r.last_failed_event()
         if lastEvent is not None:

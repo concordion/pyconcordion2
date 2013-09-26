@@ -19,10 +19,16 @@ Simply extend your python test cases from ConcordionTestCase
 
 Execute as you would normal unittests.
 
-Issues
-------
+Key Differences
+---------------
 
-Please raise them in Github. Pull requests very welcome.
+This is not a 100% port of the original Concordion framework. If you found a differing behaviour please let me know.
+
+Differences:
+
+  * Not possible to link to test data via CSV
+  * Extensions are currently not supported.
+
 
 TODO
 ----

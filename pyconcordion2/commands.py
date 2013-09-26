@@ -10,6 +10,7 @@ import re
 import traceback
 import unittest
 
+from enum import Enum
 from lxml import etree
 from lxml import html
 
@@ -17,7 +18,15 @@ import expression_parser
 
 truth_values = ['true', '1', 't', 'y', 'yes']
 
+CHAR_SPACE = '\u00A0'
+
 CONCORDION_NAMESPACE = "http://www.concordion.org/2007/concordion"
+
+
+class Status(Enum):
+    success = 1
+    failure = 2
+    ignored = 3
 
 
 class ResultEvent(object):
@@ -41,19 +50,23 @@ class Result(object):
         return ResultEvent(actual, expected)
 
     @property
-    def failureCount(self):
+    def num_failure(self):
         return len(self.failures)
 
     @property
-    def exceptionCount(self):
+    def num_exception(self):
         return len(self.exceptions)
 
     @property
-    def successCount(self):
+    def num_missing(self):
+        return len(self.missing)
+
+    @property
+    def num_success(self):
         return len(self.successes)
 
     def has_failed(self):
-        return bool(self.failureCount or self.exceptionCount)
+        return bool(self.num_failure or self.num_exception or self.num_missing)
 
     def has_succeeded(self):
         return not self.has_failed()
@@ -215,9 +228,11 @@ class RunCommand(Command):
         test_class.extra_folder = os.path.dirname(os.path.join(self.context.extra_folder, href))
         result = unittest.TextTestRunner().run(test_class)
         if result.failures or result.errors:
-            mark_status(False, self.element)
+            mark_status(Status.failure, self.element)
+        elif result.expectedFailures:
+            mark_status(Status.ignored, self.element)
         else:
-            mark_status(True, self.element)
+            mark_status(Status.success, self.element)
 
 
 class ExecuteCommand(Command):
@@ -305,21 +320,27 @@ class AssertEqualsCommand(Command):
 
         result = normalize(expression_return) == get_element_content(self.element)
         if result:
-            mark_status(result, self.element)
+            mark_status(Status.success, self.element)
         else:
-            mark_status(result, self.element, expression_return)
+            mark_status(Status.failure, self.element, expression_return)
 
 
 class AssertTrueCommand(Command):
     def _run(self):
         result = expression_parser.execute_within_context(self.context, self.expression_str)
-        mark_status(result, self.element, "== false")
+        if result:
+            mark_status(Status.success, self.element)
+        else:
+            mark_status(Status.failure, self.element, "== false")
 
 
 class AssertFalseCommand(Command):
     def _run(self):
         result = expression_parser.execute_within_context(self.context, self.expression_str)
-        mark_status(not result, self.element, "== true")
+        if not result:
+            mark_status(Status.success, self.element)
+        else:
+            mark_status(Status.failure, self.element, "== true")
 
 
 class EchoCommand(Command):
@@ -333,18 +354,14 @@ class EchoCommand(Command):
             self.element.append(em)
 
 
-def mark_status(is_successful, element, actual_value=None, class_override=None):
+def mark_status(status, element, actual_value=None):
     if not get_element_content(element):  # set non-breaking space if element is empty
-        element.text = "\u00A0"
+        element.text = CHAR_SPACE
 
-    if is_successful:
-        element.attrib["class"] = (element.attrib.get("class", "") + " success").strip()
-    else:
-        element.attrib["class"] = (element.attrib.get("class", "") + " {}".format(class_override or "failure")).strip()
-
+    element.attrib["class"] = (element.attrib.get("class", "") + " {}".format(status.name)).strip()
+    if actual_value is not None:
         actual = etree.Element("ins", **{"class": "actual"})
-        if actual_value is not None:
-            actual.text = unicode(actual_value) or "\u00A0"  # blank space if no value
+        actual.text = unicode(actual_value) or CHAR_SPACE  # blank space if no value
 
         # we move child elements from element into our new del container
         expected = etree.Element("del", **{"class": "expected"})

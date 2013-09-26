@@ -48,5 +48,5 @@ class TestRig(object):
         return re.sub(regex, "", etree.tostring(self.result.root_element.xpath("//fragment")[0])).strip()
 
     def success_or_failure(self):
-        is_failure = self.result.exceptionCount or self.result.failureCount
+        is_failure = self.result.num_exception or self.result.num_failure
         return "FAILURE" if is_failure else "SUCCESS"

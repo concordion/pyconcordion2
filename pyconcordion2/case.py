@@ -20,7 +20,7 @@ class ConcordionTestCase(unittest.TestCase):
         if self.__class__.__name__ == ConcordionTestCase.__name__:
             return True
 
-        filename = self.__find_spec()
+        filename = self._find_spec()
 
         runner = Commander(self, filename)
         runner.process()
@@ -29,7 +29,7 @@ class ConcordionTestCase(unittest.TestCase):
         self.__write(filename, runner.tree)
         self.assertTrue(runner.result.has_succeeded())
 
-    def __find_spec(self):
+    def _find_spec(self):
         """
         We find the filename of the spec based on the name of the test. If the class ends in "test" we remove it.
         """
@@ -51,14 +51,13 @@ class ConcordionTestCase(unittest.TestCase):
 
             crumb = base + ".html"
             # we skip if we're looking at the current spec
-            if crumb == self.__find_spec():
+            if crumb == self._find_spec():
                 continue
-
             if os.path.exists(crumb):
-                crumbs.insert(0, crumb)
+                crumbs.append(crumb)
             else:
                 break
-        return crumbs
+        return reversed(crumbs)
 
     def bread_crumb_tag(self):
         span_tag = etree.Element("span", {"class": "breadcrumbs"})

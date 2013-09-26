@@ -1,3 +1,4 @@
+enum34
 mock
 lxml
 pyparsing==1.5.7
