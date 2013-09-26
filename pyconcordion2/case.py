@@ -1,6 +1,8 @@
 from __future__ import unicode_literals
 import inspect
+import logging
 import os
+import sys
 import tempfile
 import unittest
 
@@ -8,12 +10,24 @@ from lxml import etree
 
 from commands import Commander
 
+logger = logging.getLogger(__file__)
+logger.level = logging.INFO
 
 TEMP_DIR = tempfile.gettempdir()
 
 
 class ConcordionTestCase(unittest.TestCase):
     extra_folder = "."
+
+    stream_handler = logging.StreamHandler(sys.stdout)
+
+    @classmethod
+    def setUpClass(cls):
+        logger.addHandler(cls.stream_handler)
+
+    @classmethod
+    def tearDownClass(cls):
+        logger.removeHandler(cls.stream_handler)
 
     def runTest(self):
         # hack to prevent the base class to be run
@@ -75,7 +89,7 @@ class ConcordionTestCase(unittest.TestCase):
             os.makedirs(output_dir)
 
         with open(os.path.join(output_dir, os.path.basename(filename)), "w") as f:
-            print "Saving to:\n%s" % f.name
+            logger.info("Saving to:\n%s" % f.name)
             f.write(etree.tostring(tree, pretty_print=True))
 
     def file_path(self):
