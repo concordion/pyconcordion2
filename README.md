@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/johnjiang/pyconcordion2.png)](https://travis-ci.org/johnjiang/pyconcordion2)
+[![Coverage Status](https://coveralls.io/repos/johnjiang/pyconcordion2/badge.png)](https://coveralls.io/r/johnjiang/pyconcordion2)
 
 pyconcordion2
 =============
@@ -38,7 +39,7 @@ Development Setup
     $ virtualenv env_concordion
     $ source ./env_concordion/bin/activate
     $ pip install -r requirements.txt
-    $ nosetests # to run tests`
+    $ nosetests  # to run tests
 
 License
 -------

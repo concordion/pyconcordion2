@@ -7,4 +7,7 @@ sys.path.insert(1, os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(3, os.path.join(os.path.dirname(__file__), "..", ".."))
 
 import IndexTest
-unittest.TextTestRunner().run(IndexTest.IndexTest())
+
+
+def test_run():
+    unittest.TextTestRunner().run(IndexTest.IndexTest())
