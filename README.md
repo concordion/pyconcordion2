@@ -30,10 +30,15 @@ Differences:
   * Extensions are currently not supported.
 
 
-TODO
-----
+Development Setup
+-----------------
 
-Make pyconcordion2 pass the Concordion spec
+`$ git clone git@github.com:johnjiang/pyconcordion2.git`
+`$ cd pyconcordion2`
+`$ virtualenv env_concordion`
+`$ source ./env_concordion/bin/activate`
+`$ pip install -r requirements.txt`
+`$ nosetests # to run tests`
 
 License
 -------

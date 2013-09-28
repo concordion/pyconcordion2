@@ -36,4 +36,8 @@ nosetests.xml
 .idea/*
 *.iml
 
+# OS X crap
 .DS_Store
+
+# virtualenv
+env_concordion
