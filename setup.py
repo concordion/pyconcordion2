@@ -24,7 +24,7 @@ setup(name='pyconcordion2',
       include_package_data=True,
       zip_safe=True,
       install_requires=[
-          'lxml', 'pyparsing', 'mock'  # -*- Extra requirements: -*-
+          'lxml', 'pyparsing', 'enum34'  # -*- Extra requirements: -*-
       ],
       entry_points="""
       # -*- Entry points: -*-
