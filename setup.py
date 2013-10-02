@@ -1,11 +1,12 @@
+import os
 from setuptools import setup, find_packages
 
+version = __import__('pyconcordion2').__version__
 
 setup(name='pyconcordion2',
-      version="0.12",
+      version=version,
       description="Concordion Python Port",
-      long_description="""\
-""",
+      long_description=open(os.path.join(os.path.dirname(__file__), 'README.md'), 'rU').read(),
       # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=["Topic :: Software Development :: Testing",
                    "License :: OSI Approved :: Apache Software License"],
@@ -14,7 +15,7 @@ setup(name='pyconcordion2',
       author_email='',
       url='https://github.com/johnjiang/pyconcordion2',
       license='Apache Software License',
-      packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
+      packages=find_packages(),
       package_data={
           'pyconcordion2': [
               'resources/*.css',
@@ -26,6 +27,8 @@ setup(name='pyconcordion2',
       install_requires=[
           'lxml', 'pyparsing', 'enum34'  # -*- Extra requirements: -*-
       ],
+      tests_require=['mock'],
+      # test_suite='runtests.get_suite',
       entry_points="""
       # -*- Entry points: -*-
       """,
