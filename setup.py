@@ -6,7 +6,7 @@ version = __import__('pyconcordion2').__version__
 setup(name='pyconcordion2',
       version=version,
       description="Concordion Python Port",
-      long_description=open(os.path.join(os.path.dirname(__file__), 'README.md'), 'rU').read(),
+      long_description=open(os.path.join(os.path.dirname(__file__), 'README.rst'), 'rU').read(),
       # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=["Topic :: Software Development :: Testing",
                    "License :: OSI Approved :: Apache Software License"],

@@ -84,7 +84,8 @@ class ConcordionTestCase(unittest.TestCase):
         return span_tag
 
     def __write(self, filename, tree):
-        output_dir = os.path.join(TEMP_DIR, self.extra_folder)
+        output_dir = os.getenv('PYCONCORDION_OUTPUT', TEMP_DIR)
+        output_dir = os.path.join(output_dir, self.extra_folder)
         if not os.path.isdir(output_dir):
             os.makedirs(output_dir)
 
