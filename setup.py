@@ -23,7 +23,7 @@ setup(name='pyconcordion2',
           ],
       },
       include_package_data=True,
-      zip_safe=True,
+      zip_safe=False,
       install_requires=[
           'lxml', 'pyparsing', 'enum34'  # -*- Extra requirements: -*-
       ],
