@@ -1,10 +1,9 @@
 import os
 from setuptools import setup, find_packages
 
-version = __import__('pyconcordion2').__version__
 
 setup(name='pyconcordion2',
-      version=version,
+      version='0.15.0',
       description="Concordion Python Port",
       long_description=open(os.path.join(os.path.dirname(__file__), 'README.rst'), 'rU').read(),
       # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
