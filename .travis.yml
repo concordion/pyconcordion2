@@ -2,7 +2,7 @@ language: python
 
 env:
   global:
-    - REPO="johnjiang/pyconcordion2"
+    - REPO="concordion/pyconcordion2"
     - CI_HOME=`pwd`/$REPO
     - PYTHONPATH="$CI_HOME/pyconcordion2:$PYTHONPATH"
 

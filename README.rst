@@ -35,7 +35,7 @@ Development Setup
 
 ::
 
-    $ git clone git@github.com:johnjiang/pyconcordion2.git
+    $ git clone git@github.com:concordion/pyconcordion2.git
     $ cd pyconcordion2
     $ virtualenv env_concordion
     $ source ./env_concordion/bin/activate
@@ -76,7 +76,7 @@ Donate Bitcoins
 .. _Concordion team: http://www.concordion.org/
 .. _pyconcordion python port: https://code.google.com/p/pyconcordion/
 
-.. |Build Status| image:: https://travis-ci.org/johnjiang/pyconcordion2.png
-   :target: https://travis-ci.org/johnjiang/pyconcordion2
-.. |Coverage Status| image:: https://coveralls.io/repos/johnjiang/pyconcordion2/badge.png
-   :target: https://coveralls.io/r/johnjiang/pyconcordion2
+.. |Build Status| image:: https://travis-ci.org/concordion/pyconcordion2.png
+   :target: https://travis-ci.org/concordion/pyconcordion2
+.. |Coverage Status| image:: https://coveralls.io/repos/concordion/pyconcordion2/badge.png
+   :target: https://coveralls.io/r/concordion/pyconcordion2
