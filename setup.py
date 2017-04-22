@@ -7,7 +7,7 @@ current_dir = os.path.dirname(os.path.realpath(__file__))
 requirements_file = 'requirements.txt'
 requirements_file_path = os.path.join(current_dir, requirements_file)
 
-install_reqs = parse_requirements(requirements_file_path)
+install_reqs = parse_requirements(requirements_file_path,session=False)
 reqs = [str(ir.req) for ir in install_reqs]
 
 setup(name='pyconcordion2',
