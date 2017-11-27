@@ -68,11 +68,6 @@ Thanks to the `Concordion team`_ for making the original framework.
 
 Thanks to JC Plessis for making `pyconcordion python port`_
 
-Donate Bitcoins
----------------
-
-1AAzqUTiRR68hN81KU3YmtJFLbcmPVM53F
-
 .. _Concordion team: http://www.concordion.org/
 .. _pyconcordion python port: https://code.google.com/p/pyconcordion/
 
