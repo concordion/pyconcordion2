@@ -42,6 +42,13 @@ Development Setup
     $ pip install -r requirements.txt
     $ nosetests  # to run tests
 
+Deploying on Pypi
+-----------------
+
+::
+    $ python2 setup.py sdist bdist_wheel
+    $ twine upload dist/*
+
 License
 -------
 
