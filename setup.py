@@ -1,7 +1,11 @@
 import os
 from setuptools import setup, find_packages
 
-from pip.req import parse_requirements
+# for pip >= 10
+try:
+    from pip._internal.req import parse_requirements
+except ImportError: # for pip <= 9.0.3
+    from pip.req import parse_requirements
 
 current_dir = os.path.dirname(os.path.realpath(__file__))
 requirements_file = 'requirements.txt'
@@ -11,7 +15,7 @@ install_reqs = parse_requirements(requirements_file_path,session=False)
 reqs = [str(ir.req) for ir in install_reqs]
 
 setup(name='pyconcordion2',
-      version='0.15.0',
+      version='0.15.1',
       description="Concordion Python Port",
       long_description=open(os.path.join(os.path.dirname(__file__), 'README.rst'), 'rU').read(),
       # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
